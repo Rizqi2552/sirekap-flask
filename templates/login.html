@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login SIREKAP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Logo Kemen -->
+    <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+
+    <!-- Logo Text -->
+    <h1 class="title">SIREKAP</h1>
+
+    <!-- Subtitle -->
+    <p class="subtitle">Sistem Rekap Absensi</p>
+
+    <!-- Card -->
+    <div class="login-card">
+
+        <form method="POST">
+
+            <div class="input-group">
+                <img src="{{ url_for('static', filename='icon.png') }}">
+                <input type="text" name="username" placeholder="Username">
+            </div>
+
+            <div class="input-group password-group">
+                <img src="{{ url_for('static', filename='key.png') }}">
+                <input type="password" id="password" name="password" placeholder="Password">
+                <span class="toggle-password" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <div class="remember">
+                <input type="checkbox"> Ingat saya
+            </div>
+
+            <button type="submit" class="btn-login">LOGIN</button>
+
+        </form>
+
+    </div>
+
+    <p class="footer">
+        © Kementerian Imigrasi dan Pemasyarakatan<br>
+        Republik Indonesia
+    </p>
+
+</div>
+
+<script>
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

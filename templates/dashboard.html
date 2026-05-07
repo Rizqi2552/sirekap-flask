@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard SIREKAP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+    <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo-small">
+        <div class="brand-text">
+            <h1>SIREKAP</h1>
+            <p>Sistem Rekap Absensi</p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="logout">
+        <img src="{{ url_for('static', filename='logout.png') }}">
+    </a>
+</header>
+
+<main class="content">
+
+<!-- ================= FORM LOAD ================= -->
+<section class="card form-card">
+
+    <div class="form-header">
+        <div class="icon-box">
+            <img src="{{ url_for('static', filename='folder.png') }}">
+        </div>
+        <div>
+            <h3>Filter & Upload Absensi</h3>
+            <p>Pilih file dan periode absensi yang ingin ditampilkan.</p>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="form-grid">
+
+        <input type="hidden" name="aksi" value="load">
+
+        <!-- Upload -->
+        <div class="form-group">
+            <label>Upload File</label>
+            <div class="input-icon">
+                <img src="{{ url_for('static', filename='cloud.png') }}">
+                <input type="file" name="file" required>
+            </div>
+
+            {% if filename %}
+            <p style="margin-top:5px; font-size:12px; color:#666;">
+                File dipilih: <b>{{ filename }}</b>
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Bulan -->
+        <div class="form-group">
+            <label>Bulan</label>
+            <div class="input-icon">
+                <img src="{{ url_for('static', filename='kalender.png') }}">
+                <select name="bulan" required>
+                    <option value="">Pilih Bulan</option>
+                    {% set bulan_list = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] %}
+                    {% for i in range(12) %}
+                    <option value="{{ i+1 }}">{{ bulan_list[i] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Tahun -->
+        <div class="form-group">
+            <label>Tahun</label>
+            <div class="input-icon">
+                <img src="{{ url_for('static', filename='kalender.png') }}">
+                <select name="tahun" required>
+                    <option value="">Pilih Tahun</option>
+                    {% for y in range(2025, 2035) %}
+                    <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="form-group button-group">
+            <label style="visibility: hidden;">Tampilkan</label>
+            <button type="submit" class="btn-tampil">
+                <img src="{{ url_for('static', filename='tampilkan.png') }}">
+                Tampilkan
+            </button>
+        </div>
+
+    </form>
+</section>
+
+
+<!-- ================= UPDATE ================= -->
+{% if tabel %}
+<section class="card form-card">
+
+    <h3>Update</h3>
+
+    <form method="POST">
+        <input type="hidden" name="aksi" value="update">
+
+        <!-- HEADER -->
+        <div class="update-header">
+            <span>Nama</span>
+            <span>Dari</span>
+            <span>Sampai</span>
+            <span>Status</span>
+        </div>
+
+        <div id="update-container">
+
+            <div class="update-row">
+
+                <select name="nama[]">
+                    <option value="">Pilih Nama</option>
+                    {% for row in tabel %}
+                    <option value="{{ row['Nama'] }}">{{ row['Nama'] }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="mulai[]">
+                    <option value="">Pilih Tanggal</option>
+                    {% for k in kolom %}
+                        {% if k.isdigit() %}
+                        <option value="{{ k }}">{{ k }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+                <select name="selesai[]">
+                    <option value="">Pilih Tanggal</option>
+                    {% for k in kolom %}
+                        {% if k.isdigit() %}
+                        <option value="{{ k }}">{{ k }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+
+                <select name="status[]">
+                    <option value="">Pilih Status</option>
+                    <option value="H">Hadir</option>
+                    <option value="C">Cuti</option>
+                    <option value="S">Sakit</option>
+                    <option value="DL">Dinas Luar</option>
+                    <option value="R">Rupbasan</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:10px;">
+            <button type="button" onclick="tambahRow()">+ Tambah</button>
+            <button type="submit" class="btn-tampil">Update</button>
+        </div>
+
+    </form>
+
+    <!-- UNDO REDO RESET -->
+    <div style="margin-top:10px; display:flex; gap:10px;">
+
+        <form method="POST">
+            <button name="aksi" value="undo">Undo</button>
+        </form>
+
+        <form method="POST">
+            <button name="aksi" value="redo">Redo</button>
+        </form>
+
+        <form method="POST">
+            <button name="aksi" value="reset"
+                onclick="return confirm('Yakin reset semua data?')">
+                Reset
+            </button>
+        </form>
+
+    </div>
+
+</section>
+{% endif %}
+
+
+<!-- ================= TABEL ================= -->
+{% if tabel %}
+<section class="card table-card">
+
+    <h3>Hasil Rekap Absensi</h3>
+
+    <div style="margin-bottom:15px; display:flex; gap:10px; align-items:center;">
+         <label><b>Filter Minggu:</b></label>
+
+         <select id="filterMinggu" onchange="filterMinggu()">
+             <option value="all">Semua</option>
+             <option value="1">Minggu 1</option>
+             <option value="2">Minggu 2</option>
+             <option value="3">Minggu 3</option>
+             <option value="4">Minggu 4</option>
+             <option value="5">Minggu 5</option>
+         </select>
+         <a href="{{ url_for('download_excel') }}" class="btn-download">
+             ⬇ Download Excel
+         </a>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+
+            <thead>
+                <tr>
+                    {% for k in kolom %}
+                    <th 
+                       data-day="{{ k }}"
+                       class="{% if k in day_map %}tanggal-col {{ day_map.get(k, '') }}{% endif %}">
+                       {{ k }}
+                    </th>
+                    
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in tabel %}
+                <tr>
+                    {% for k in kolom %}
+                        {% set val = row[k] %}
+                        {% set cls = "" %}
+
+                        {% if k in day_map %}
+                            {% if day_map.get(k) == "sabtu" %}
+                                {% set cls = "sabtu" %}
+                            {% elif day_map.get(k) == "minggu" %}
+                                {% set cls = "minggu" %}
+                            {% elif val == "" %}
+                                {% set cls = "kosong" %}
+                            {% endif %}
+                        {% endif %}
+
+                        <td 
+                            data-day="{{ k }}"
+                            class="{{ cls }} 
+                            {% if k in day_map %}tanggal-col{% endif %}
+                            {% if k == 'Total' %}total-col{% endif %}">
+                            {{ val }}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</section>
+{% endif %}
+
+{% if riwayat %}
+<section class="card table-card">
+
+    <h3>Riwayat Perubahan</h3>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Dari</th>
+                    <th>Sampai</th>
+                    <th>Status</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for r in riwayat|reverse %}
+                <tr>
+                    <td>{{ r.nama }}</td>
+                    <td>{{ r.mulai }}</td>
+                    <td>{{ r.selesai }}</td>
+                    <td>{{ r.status }}</td>
+                    <td>{{ r.waktu }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+{% endif %}
+
+</main>
+
+<script>
+
+function tambahRow() {
+    let container = document.getElementById("update-container");
+    let row = container.children[0].cloneNode(true);
+    container.appendChild(row);
+}
+
+// ================= SIMPAN TOTAL AWAL =================
+function simpanTotalAwal() {
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+        let totalCell = row.querySelector(".total-col");
+        if (totalCell) {
+            totalCell.setAttribute("data-asli", totalCell.textContent);
+        }
+    });
+}
+
+// ================= RESET TOTAL =================
+function resetTotal() {
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+        let totalCell = row.querySelector(".total-col");
+        if (totalCell) {
+            totalCell.textContent = totalCell.getAttribute("data-asli");
+        }
+    });
+}
+
+// ================= HITUNG ULANG =================
+function hitungUlangTotal() {
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+        let total = 0;
+
+        let cells = row.querySelectorAll("td.tanggal-col");
+
+        cells.forEach(cell => {
+            if (cell.style.display !== "none") {
+                if (cell.textContent.trim() === "H") {
+                    total++;
+                }
+            }
+        });
+
+        let totalCell = row.querySelector(".total-col");
+        if (totalCell) {
+            totalCell.textContent = total;
+        }
+    });
+}
+
+// ================= FILTER MINGGU =================
+function filterMinggu() {
+    let mingguEl = document.getElementById("filterMinggu");
+    if (!mingguEl) return;
+
+    let minggu = mingguEl.value;
+
+    let semuaKolom = document.querySelectorAll(".tanggal-col");
+
+    semuaKolom.forEach(el => {
+        let day = el.getAttribute("data-day");
+
+        if (!day || isNaN(day)) return;
+
+        let mingguKe = Math.ceil(day / 7);
+
+        if (minggu === "all") {
+            el.style.display = "";
+        } else {
+            el.style.display = (mingguKe == minggu) ? "" : "none";
+            }
+       });
+     
+       if (minggu === "all") {
+        resetTotal();
+       } else {
+        hitungUlangTotal();
+       }
+}
+
+// ================= LOAD =================
+document.addEventListener("DOMContentLoaded", function () {
+
+    simpanTotalAwal(); // 🔥 WAJIB
+
+    let filter = document.getElementById("filterMinggu");
+    if (filter) {
+        filter.addEventListener("change", function() {
+            this.style.background = "#007bff";
+            this.style.color = "white";
+        });
+    }
+
+});
+
+
+</script>
+
+</body>
+</html>
