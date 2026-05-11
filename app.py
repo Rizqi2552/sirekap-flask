@@ -76,10 +76,12 @@ def create_attendance(df, bulan, tahun, minggu="all"):
 
     # ================= MERGE =================
     pegawai = pegawai_master.merge(
-        pegawai,
+        pegawai[['NIP', 'Nama']],
         on='NIP',
         how='left'
     )
+
+    pegawai['Nama'] = pegawai['Nama'].fillna("")
 
     last_day = calendar.monthrange(tahun, bulan)[1]
 
