@@ -70,7 +70,6 @@ def create_attendance(df, bulan, tahun, minggu="all"):
     if minggu != "all":
         minggu = int(minggu)
         tanggal_range = [tgl for tgl in tanggal_range if math.ceil(tgl.day / 7) == minggu]
-        ]
 
     tabel = pd.DataFrame()
 
@@ -88,16 +87,18 @@ def create_attendance(df, bulan, tahun, minggu="all"):
 
         tabel[col] = ""
 
-    hadir = df[df['tanggal'] == tgl.date()]['id number'].astype(str).str.strip().unique()
+        hadir = df[df['tanggal'] == tgl.date()]['id number'].astype(str).str.strip().unique()
 
-    for i in tabel.index:
-        if tabel.loc[i, 'NIP'] in hadir:
-            tabel.loc[i, col] = "H"
+        for i in tabel.index:
+            if tabel.loc[i, 'NIP'] in hadir:
+                tabel.loc[i, col] = "H"
 
         if tgl.weekday() == 5:
             day_map[col] = "sabtu"
+
         elif tgl.weekday() == 6:
             day_map[col] = "minggu"
+
         else:
             day_map[col] = ""
 
