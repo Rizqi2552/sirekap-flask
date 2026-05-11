@@ -56,31 +56,8 @@ def load_data(file):
 
 # ================= CREATE ATTENDANCE =================
 def create_attendance(df, bulan, tahun, minggu="all"):
-        # ================= LOAD MASTER PEGAWAI =================
-    pegawai_master = pd.read_excel("pegawai.xlsx", dtype=str)
 
-    pegawai_master.columns = pegawai_master.columns.str.strip()
-
-    pegawai_master['NIP'] = pegawai_master['NIP'].astype(str).str.strip()
-
-    # ================= DATA PEGAWAI DARI FINGERPRINT =================
-    pegawai_fp = df[['id number', 'name']].drop_duplicates().reset_index(drop=True)
-
-    pegawai_fp['id number'] = pegawai_fp['id number'].astype(str).str.strip()
-
-    pegawai_fp = pegawai_fp.rename(columns={
-        'id number': 'NIP',
-        'name': 'Nama_FP'
-    })
-
-    # ================= MERGE MASTER + FINGERPRINT =================
-    pegawai = pegawai_master.merge(
-        pegawai_fp[['NIP', 'Nama_FP']],
-        on='NIP',
-        how='left'
-    )
-
-    pegawai['Nama'] = pegawai_master['Nama']
+    pegawai = df[['id number', 'name']].drop_duplicates().reset_index(drop=True)
 
     last_day = calendar.monthrange(tahun, bulan)[1]
 
@@ -93,10 +70,12 @@ def create_attendance(df, bulan, tahun, minggu="all"):
     if minggu != "all":
         minggu = int(minggu)
         tanggal_range = [tgl for tgl in tanggal_range if math.ceil(tgl.day / 7) == minggu]
+        ]
 
     tabel = pd.DataFrame()
-    tabel['NIP'] = pegawai['NIP'].fillna("").astype(str).str.strip()
-    tabel['Nama'] = pegawai['Nama'].fillna("").astype(str).str.strip()
+
+    tabel['NIP'] = pegawai['id number'].fillna("").astype(str).str.strip()
+    tabel['Nama'] = pegawai['name'].fillna("").astype(str).str.strip()
 
     tabel['NIP'] = tabel['NIP'].replace(["", "nan", "None"], "-")
 
