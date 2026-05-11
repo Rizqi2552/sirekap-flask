@@ -63,25 +63,24 @@ def create_attendance(df, bulan, tahun, minggu="all"):
 
     pegawai_master['NIP'] = pegawai_master['NIP'].astype(str).str.strip()
 
-    # ================= AMBIL PEGAWAI DARI ABSENSI =================
-    pegawai = df[['id number', 'name']].drop_duplicates().reset_index(drop=True)
+    # ================= DATA PEGAWAI DARI FINGERPRINT =================
+    pegawai_fp = df[['id number', 'name']].drop_duplicates().reset_index(drop=True)
 
-    pegawai['id number'] = pegawai['id number'].astype(str).str.strip()
+    pegawai_fp['id number'] = pegawai_fp['id number'].astype(str).str.strip()
 
-    # ================= RENAME =================
-    pegawai = pegawai.rename(columns={
+    pegawai_fp = pegawai_fp.rename(columns={
         'id number': 'NIP',
-        'name': 'Nama'
+        'name': 'Nama_FP'
     })
 
-    # ================= MERGE =================
+    # ================= MERGE MASTER + FINGERPRINT =================
     pegawai = pegawai_master.merge(
-        pegawai[['NIP', 'Nama']],
+        pegawai_fp[['NIP', 'Nama_FP']],
         on='NIP',
         how='left'
     )
 
-    pegawai['Nama'] = pegawai['Nama'].fillna("")
+    pegawai['Nama'] = pegawai_master['Nama']
 
     last_day = calendar.monthrange(tahun, bulan)[1]
 
