@@ -80,7 +80,6 @@ def create_attendance(df, bulan, tahun, minggu="all"):
         on='NIP',
         how='left'
     )
-    )
 
     last_day = calendar.monthrange(tahun, bulan)[1]
 
