@@ -35,7 +35,9 @@ body {
 }
 
 .logo-small {
-    width: 50px;
+    width: 45px;
+    height: auto;
+    object-fit: contain;
 }
 
 .brand-text {

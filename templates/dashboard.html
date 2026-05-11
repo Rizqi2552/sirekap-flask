@@ -7,6 +7,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="icon" type="image/png"
+      href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 
 <body>
@@ -14,7 +16,12 @@
 <!-- HEADER -->
 <header class="topbar">
     <div class="brand">
+
         <img src="{{ url_for('static', filename='logo.png') }}" class="logo-small">
+
+        <img src="{{ url_for('static', filename='pemasyarakatan.png') }}" class="logo-small">
+
+    </div>
         <div class="brand-text">
             <h1>SIREKAP</h1>
             <p>Sistem Rekap Absensi</p>

@@ -5,14 +5,20 @@
     <title>Login SIREKAP</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png"
+      href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- Logo Kemen -->
+    <!-- Logo -->
+    <div class="logo-group">
     <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+
+    <img src="{{ url_for('static', filename='pemasyarakatan.png') }}" class="logo">
+    </div>
 
     <!-- Logo Text -->
     <h1 class="title">SIREKAP</h1>
