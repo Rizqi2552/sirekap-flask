@@ -56,7 +56,55 @@ def load_data(file):
 
 # ================= CREATE ATTENDANCE =================
 def create_attendance(df, bulan, tahun, minggu="all"):
+        # ================= LOAD MASTER PEGAWAI =================
+    pegawai_master = pd.read_excel("pegawai.xlsx", dtype=str)
+
+    pegawai_master.columns = pegawai_master.columns.str.strip()
+
+    pegawai_master['NIP'] = pegawai_master['NIP'].astype(str).str.strip()
+
+    # ================= AMBIL PEGAWAI DARI ABSENSI =================
     pegawai = df[['id number', 'name']].drop_duplicates().reset_index(drop=True)
+
+    pegawai['id number'] = pegawai['id number'].astype(str).str.strip()
+
+    # ================= RENAME =================
+    pegawai = pegawai.rename(columns={
+        'id number': 'NIP',
+        'name': 'Nama'
+    })
+
+    # ================= MERGE =================
+    pegawai = pegawai.merge(
+        pegawai_master[['NIP', 'Pangkat']],
+        on='NIP',
+        how='left'
+    )
+
+    # ================= URUTAN PANGKAT =================
+    urutan_pangkat = {
+        "IV/e": 1,
+        "IV/d": 2,
+        "IV/c": 3,
+        "IV/b": 4,
+        "IV/a": 5,
+        "III/d": 6,
+        "III/c": 7,
+        "III/b": 8,
+        "III/a": 9,
+        "II/d": 10,
+        "II/c": 11,
+        "II/b": 12,
+        "II/a": 13,
+        "I/d": 14,
+        "I/c": 15,
+        "I/b": 16,
+        "I/a": 17,
+    }
+
+    pegawai['urutan'] = pegawai['Pangkat'].map(urutan_pangkat)
+
+    pegawai = pegawai.sort_values('urutan')
 
     last_day = calendar.monthrange(tahun, bulan)[1]
 
@@ -71,8 +119,9 @@ def create_attendance(df, bulan, tahun, minggu="all"):
         tanggal_range = [tgl for tgl in tanggal_range if math.ceil(tgl.day / 7) == minggu]
 
     tabel = pd.DataFrame()
-    tabel['NIP'] = pegawai['id number'].fillna("").astype(str).str.strip()
-    tabel['Nama'] = pegawai['name'].fillna("").astype(str).str.strip()
+    tabel['NIP'] = pegawai['NIP'].fillna("").astype(str).str.strip()
+    tabel['Nama'] = pegawai['Nama'].fillna("").astype(str).str.strip()
+    tabel['Pangkat'] = pegawai['Pangkat'].fillna("")
 
     tabel['NIP'] = tabel['NIP'].replace(["", "nan", "None"], "-")
 
@@ -104,7 +153,7 @@ def create_attendance(df, bulan, tahun, minggu="all"):
     )
 
     tabel.insert(0, "No", range(1, len(tabel) + 1))
-    tabel = tabel[['No', 'NIP', 'Nama'] + tanggal_cols + ['Total']]
+    tabel = tabel[['No', 'NIP', 'Nama', 'Pangkat'] + tanggal_cols + ['Total']]
 
     return tabel, day_map
 
