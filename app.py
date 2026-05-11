@@ -275,7 +275,7 @@ def download_excel():
     header_fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
     sabtu_fill = PatternFill(start_color="053DB3", end_color="053DB3", fill_type="solid")   # biru
     minggu_fill = PatternFill(start_color="E60008", end_color="E60008", fill_type="solid")  # merah
-    dl_fill = PatternFill(start_color="F4B084", end_color="F4B084", fill_type="solid")      # oranye
+    d_fill = PatternFill(start_color="F4B084", end_color="F4B084", fill_type="solid")      # oranye
 
     # ================= BORDER =================
     thin = Side(style='thin')
@@ -322,9 +322,9 @@ def download_excel():
             # alignment
             cell.alignment = Alignment(horizontal="center", vertical="center")
 
-            # DL warna oranye
-            if val == "DL":
-                cell.fill = dl_fill
+            # D warna oranye
+            if val == "D":
+                cell.fill = d_fill
 
             # sabtu minggu kolom
             col_name = kolom[j]
