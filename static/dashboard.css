@@ -149,7 +149,7 @@ textarea {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr auto;
     gap: 15px;
-    align-items: start;
+    align-items: end;
 }
 
 /* ===== GROUP ===== */
@@ -205,9 +205,7 @@ input[type="file"] {
 /* ===== BUTTON ===== */
 .button-group {
     display: flex;
-    align-items: flex-end;
     height: 100%;
-    padding-top: 30px;
 }
 
 .button-group label {
