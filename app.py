@@ -5,6 +5,7 @@ import calendar
 import math
 import os
 import datetime
+import copy
 
 app = Flask(__name__)
 app.secret_key = 'sirekap_secret_key'
@@ -148,7 +149,7 @@ def dashboard():
                     session['tabel'] = tabel
                     session['kolom'] = kolom
                     session['day_map'] = day_map
-                    session['tabel_awal'] = [row.copy() for row in tabel]
+                    session['tabel_awal'] = copy.deepcopy(tabel)
                     session['history'] = []
                     session['redo'] = []
                     session['riwayat'] = []
@@ -235,7 +236,7 @@ def dashboard():
 
             # ================= RESET =================
             elif aksi == "reset":
-                session['tabel'] = session.get('tabel_awal', [])
+                session['tabel'] = copy.deepcopy(session.get('tabel_awal', []))
                 session['history'] = []
                 session['redo'] = []
                 session['riwayat'] = []
