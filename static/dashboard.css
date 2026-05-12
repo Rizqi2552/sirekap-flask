@@ -10,6 +10,25 @@ body {
     box-sizing: border-box;
 }
 
+/* ===== FONT GLOBAL ===== */
+body,
+input,
+select,
+button,
+textarea,
+option {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ===== FORM STYLE ===== */
+input,
+select,
+button,
+textarea {
+    font-size: 14px;
+    font-weight: 500;
+}
+
 /* ===== HEADER ===== */
 .topbar {
     position: fixed;

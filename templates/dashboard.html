@@ -137,45 +137,61 @@
 
             <div class="update-row">
 
-                <select name="nama[]">
-                    <option value="">Pilih Nama</option>
-                    {% for row in tabel %}
-                    <option value="{{ row['Nama'] }}">{{ row['Nama'] }}</option>
-                    {% endfor %}
-                </select>
+                <div class="input-icon">
+                    <img src="{{ url_for('static', filename='nama.png') }}">
 
-                <select name="mulai[]">
-                    <option value="">Pilih Tanggal</option>
-                    {% for k in kolom %}
-                        {% if k.isdigit() %}
-                        <option value="{{ k }}">{{ k }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                    <select name="nama[]">
+                        <option value="">Pilih Nama</option>
+                        {% for row in tabel %}
+                        <option value="{{ row['Nama'] }}">{{ row['Nama'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <select name="selesai[]">
-                    <option value="">Pilih Tanggal</option>
-                    {% for k in kolom %}
-                        {% if k.isdigit() %}
-                        <option value="{{ k }}">{{ k }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                <div class="input-icon">
+                    <img src="{{ url_for('static', filename='kalender.png') }}">
 
+                    <select name="mulai[]">
+                        <option value="">Pilih Tanggal</option>
+                        {% for k in kolom %}
+                            {% if k.isdigit() %}
+                            <option value="{{ k }}">{{ k }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <select name="status[]">
-                    <option value="">Pilih Status</option>
-                    <option value="H">Hadir</option>
-                    <option value="C">Cuti</option>
-                    <option value="S">Cuti Sakit</option>
-                    <option value="CA">Cuti Alasan Penting</option>
-                    <option value="D">Dinas Luar</option>
-                    <option value="L">Lepas Dinas</option>
+                <div class="input-icon">
+                    <img src="{{ url_for('static', filename='kalender.png') }}">
+
+                    <select name="selesai[]">
+                        <option value="">Pilih Tanggal</option>
+                        {% for k in kolom %}
+                            {% if k.isdigit() %}
+                            <option value="{{ k }}">{{ k }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-icon">
+                    <img src="{{ url_for('static', filename='status.png') }}">
+
+                    <select name="status[]">
+                        <option value="">Pilih Status</option>
+                        <option value="H">Hadir</option>
+                        <option value="C">Cuti</option>
+                        <option value="S">Cuti Sakit</option>
+                        <option value="CA">Cuti Alasan Penting</option>
+                        <option value="D">Dinas Luar</option>
+                        <option value="L">Lepas Dinas</option>
                 </select>
 
             </div>
 
         </div>
+
+   </div>
 
         <div style="margin-top:10px; display:flex; gap:10px;">
             <button type="button" onclick="tambahRow()">+ Tambah</button>
