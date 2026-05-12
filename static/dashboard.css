@@ -147,9 +147,9 @@ textarea {
 /* ===== GRID FORM ===== */
 .form-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    grid-template-columns: 2fr 1fr 1fr auto;
     gap: 15px;
-    align-items: end;
+    align-items: start;
 }
 
 /* ===== GROUP ===== */
@@ -207,6 +207,7 @@ input[type="file"] {
     display: flex;
     align-items: flex-end;
     height: 100%;
+    padding-top: 30px;
 }
 
 .button-group label {
