@@ -307,6 +307,12 @@ td:hover {
     margin-bottom: 10px;
 }
 
+/* BIAR SEMUA INPUT UPDATE SAMA LEBAR */
+.update-row .input-icon {
+    flex: 1;
+    min-width: 180px;
+}
+
 .update-row select {
     flex: 1;
 }
